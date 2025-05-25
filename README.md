@@ -121,11 +121,13 @@ StudyFlow/
 **Home**  
 ![Home](https://github.com/user-attachments/assets/a000e467-1b50-4932-9fe6-58d129ee4c9d)
 
-**Dashboard**  
-![Dashboard](https://github.com/user-attachments/assets/13005b2f-d0b6-40dc-be0f-5da9207138f4)
+**Dashboard** 
+
+![Rules](https://github.com/user-attachments/assets/111e768b-aae2-44b2-8f37-c9194291ba0a)
 
 **Rules**  
-![Rules](https://github.com/user-attachments/assets/111e768b-aae2-44b2-8f37-c9194291ba0a)
+ 
+![Dashboard](https://github.com/user-attachments/assets/13005b2f-d0b6-40dc-be0f-5da9207138f4)
 
 ---
 
