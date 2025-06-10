@@ -1,0 +1,156 @@
+@startuml FocusMind StudyFlow
+
+' Style settings
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor White
+    ArrowColor Black
+    BorderColor Black
+}
+
+' Model Classes
+class StudySession {
+    -id: int
+    -taskType: String
+    -difficulty: int
+    -fatigueLevel: int
+    -duration: int
+    -notes: String
+    -createdAt: LocalDateTime
+    +StudySession()
+    +StudySession(taskType, difficulty, fatigueLevel, duration, notes)
+    +getId(): int
+    +getTaskType(): String
+    +getDifficulty(): int
+    +getFatigueLevel(): int
+    +getDuration(): int
+    +getNotes(): String
+    +getCreatedAt(): LocalDateTime
+    +setTaskType(String): void
+    +setDifficulty(int): void
+    +setFatigueLevel(int): void
+    +setDuration(int): void
+    +setNotes(String): void
+}
+
+class AdaptRule {
+    -id: int
+    -condition: String
+    -adjustment: int
+    -isActive: boolean
+    -createdAt: LocalDateTime
+    +AdaptRule()
+    +AdaptRule(condition, adjustment)
+    +getId(): int
+    +getCondition(): String
+    +getAdjustment(): int
+    +isActive(): boolean
+    +getCreatedAt(): LocalDateTime
+    +setCondition(String): void
+    +setAdjustment(int): void
+    +setActive(boolean): void
+}
+
+class ChatMessage {
+    -id: int
+    -sessionId: int
+    -message: String
+    -response: String
+    -createdAt: LocalDateTime
+    +ChatMessage()
+    +ChatMessage(sessionId, message, response)
+    +getId(): int
+    +getSessionId(): int
+    +getMessage(): String
+    +getResponse(): String
+    +getCreatedAt(): LocalDateTime
+    +setMessage(String): void
+    +setResponse(String): void
+}
+
+' DAO Interfaces
+interface StudySessionDAO {
+    +save(StudySession): void
+    +findById(int): StudySession
+    +findAll(): List<StudySession>
+    +update(StudySession): void
+    +delete(int): void
+}
+
+interface AdaptRuleDAO {
+    +save(AdaptRule): void
+    +findById(int): AdaptRule
+    +findAll(): List<AdaptRule>
+    +findActive(): List<AdaptRule>
+    +update(AdaptRule): void
+    +delete(int): void
+}
+
+interface ChatMessageDAO {
+    +save(ChatMessage): void
+    +findBySessionId(int): List<ChatMessage>
+    +findAll(): List<ChatMessage>
+    +update(ChatMessage): void
+    +delete(int): void
+}
+
+' Utility Classes
+class RuleEngine {
+    -rules: List<AdaptRule>
+    +RuleEngine()
+    +addRule(AdaptRule): void
+    +removeRule(int): void
+    +applyRules(StudySession): int
+    +getActiveRules(): List<AdaptRule>
+}
+
+class DBUtil {
+    -{static} URL: String
+    -{static} USER: String
+    -{static} PASSWORD: String
+    +getConnection(): Connection
+    +closeConnection(Connection): void
+}
+
+' Servlet Classes
+class LoggerServlet {
+    -sessionDAO: StudySessionDAO
+    -ruleEngine: RuleEngine
+    +doPost(HttpServletRequest, HttpServletResponse): void
+    +doGet(HttpServletRequest, HttpServletResponse): void
+}
+
+class DashboardServlet {
+    -sessionDAO: StudySessionDAO
+    -ruleDAO: AdaptRuleDAO
+    +doGet(HttpServletRequest, HttpServletResponse): void
+}
+
+class RuleServlet {
+    -ruleDAO: AdaptRuleDAO
+    +doPost(HttpServletRequest, HttpServletResponse): void
+    +doGet(HttpServletRequest, HttpServletResponse): void
+}
+
+class ChatServlet {
+    -chatDAO: ChatMessageDAO
+    -sessionDAO: StudySessionDAO
+    +doPost(HttpServletRequest, HttpServletResponse): void
+    +doGet(HttpServletRequest, HttpServletResponse): void
+}
+
+' Relationships
+StudySessionDAO <|.. StudySession : implements
+AdaptRuleDAO <|.. AdaptRule : implements
+ChatMessageDAO <|.. ChatMessage : implements
+
+LoggerServlet --> StudySessionDAO : uses
+LoggerServlet --> RuleEngine : uses
+DashboardServlet --> StudySessionDAO : uses
+DashboardServlet --> AdaptRuleDAO : uses
+RuleServlet --> AdaptRuleDAO : uses
+ChatServlet --> ChatMessageDAO : uses
+ChatServlet --> StudySessionDAO : uses
+RuleEngine --> AdaptRuleDAO : uses
+
+@enduml 

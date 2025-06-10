@@ -1,0 +1,28 @@
+erDiagram
+    StudySession {
+        int id PK
+        string task_type
+        int difficulty
+        int fatigue_level
+        int duration
+        string notes
+        datetime created_at
+    }
+
+    AdaptRule {
+        int id PK
+        string condition
+        int adjustment
+        boolean is_active
+        datetime created_at
+    }
+
+    ChatMessage {
+        int id PK
+        int session_id FK
+        string message
+        string response
+        datetime created_at
+    }
+
+    StudySession ||--o{ ChatMessage : "has" 

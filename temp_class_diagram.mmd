@@ -1,0 +1,142 @@
+classDiagram
+    class StudySession {
+        -int id
+        -String taskType
+        -int difficulty
+        -int fatigueLevel
+        -int duration
+        -String notes
+        -LocalDateTime createdAt
+        +StudySession()
+        +StudySession(taskType, difficulty, fatigueLevel, duration, notes)
+        +getId() int
+        +getTaskType() String
+        +getDifficulty() int
+        +getFatigueLevel() int
+        +getDuration() int
+        +getNotes() String
+        +getCreatedAt() LocalDateTime
+        +setTaskType(String)
+        +setDifficulty(int)
+        +setFatigueLevel(int)
+        +setDuration(int)
+        +setNotes(String)
+    }
+
+    class AdaptRule {
+        -int id
+        -String condition
+        -int adjustment
+        -boolean isActive
+        -LocalDateTime createdAt
+        +AdaptRule()
+        +AdaptRule(condition, adjustment)
+        +getId() int
+        +getCondition() String
+        +getAdjustment() int
+        +isActive() boolean
+        +getCreatedAt() LocalDateTime
+        +setCondition(String)
+        +setAdjustment(int)
+        +setActive(boolean)
+    }
+
+    class ChatMessage {
+        -int id
+        -int sessionId
+        -String message
+        -String response
+        -LocalDateTime createdAt
+        +ChatMessage()
+        +ChatMessage(sessionId, message, response)
+        +getId() int
+        +getSessionId() int
+        +getMessage() String
+        +getResponse() String
+        +getCreatedAt() LocalDateTime
+        +setMessage(String)
+        +setResponse(String)
+    }
+
+    class StudySessionDAO {
+        <<interface>>
+        +save(StudySession) void
+        +findById(int) StudySession
+        +findAll() List~StudySession~
+        +update(StudySession) void
+        +delete(int) void
+    }
+
+    class AdaptRuleDAO {
+        <<interface>>
+        +save(AdaptRule) void
+        +findById(int) AdaptRule
+        +findAll() List~AdaptRule~
+        +findActive() List~AdaptRule~
+        +update(AdaptRule) void
+        +delete(int) void
+    }
+
+    class ChatMessageDAO {
+        <<interface>>
+        +save(ChatMessage) void
+        +findBySessionId(int) List~ChatMessage~
+        +findAll() List~ChatMessage~
+        +update(ChatMessage) void
+        +delete(int) void
+    }
+
+    class RuleEngine {
+        -List~AdaptRule~ rules
+        +RuleEngine()
+        +addRule(AdaptRule) void
+        +removeRule(int) void
+        +applyRules(StudySession) int
+        +getActiveRules() List~AdaptRule~
+    }
+
+    class DBUtil {
+        -static String URL
+        -static String USER
+        -static String PASSWORD
+        +getConnection() Connection
+        +closeConnection(Connection) void
+    }
+
+    class LoggerServlet {
+        -StudySessionDAO sessionDAO
+        -RuleEngine ruleEngine
+        +doPost(HttpServletRequest, HttpServletResponse) void
+        +doGet(HttpServletRequest, HttpServletResponse) void
+    }
+
+    class DashboardServlet {
+        -StudySessionDAO sessionDAO
+        -AdaptRuleDAO ruleDAO
+        +doGet(HttpServletRequest, HttpServletResponse) void
+    }
+
+    class RuleServlet {
+        -AdaptRuleDAO ruleDAO
+        +doPost(HttpServletRequest, HttpServletResponse) void
+        +doGet(HttpServletRequest, HttpServletResponse) void
+    }
+
+    class ChatServlet {
+        -ChatMessageDAO chatDAO
+        -StudySessionDAO sessionDAO
+        +doPost(HttpServletRequest, HttpServletResponse) void
+        +doGet(HttpServletRequest, HttpServletResponse) void
+    }
+
+    StudySessionDAO <|.. StudySession
+    AdaptRuleDAO <|.. AdaptRule
+    ChatMessageDAO <|.. ChatMessage
+    LoggerServlet --> StudySessionDAO
+    LoggerServlet --> RuleEngine
+    DashboardServlet --> StudySessionDAO
+    DashboardServlet --> AdaptRuleDAO
+    RuleServlet --> AdaptRuleDAO
+    ChatServlet --> ChatMessageDAO
+    ChatServlet --> StudySessionDAO
+    RuleEngine --> AdaptRuleDAO 
